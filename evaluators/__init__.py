@@ -1,1 +1,1 @@
-from paper_evaluator import *
+from .paper_evaluator import *
