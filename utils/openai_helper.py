@@ -2,7 +2,7 @@ import openai
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from typing import List, Dict
+from typing import List, Dict, Literal
 from scholarly import scholarly
 import requests
 from bs4 import BeautifulSoup
@@ -31,6 +31,23 @@ def analyze_text(text, task, model='gpt-3.5-turbo-16k'):
         return response.choices[0].message.content
     except openai.APIError as e:
         return f"Error in API call: {str(e)}"
+
+
+def generate_text(messages: List[Dict[Literal["role", "content"], str]], model='gpt-3.5-turbo-16k'):
+    try:
+        response = client.chat.completions.create(
+            model=model,  # Using the latest model for better performance
+            messages=messages,
+            max_tokens=2000,  # Increased for more comprehensive analysis
+            temperature=0.7,  # Adjusted for a balance of creativity and consistency
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(e)
+        return "Error occurred"
 
 
 class ResearchAgent:
